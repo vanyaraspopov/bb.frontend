@@ -6,3 +6,6 @@ gen
 /css/*.css
 /css/*.css.map
 /js/*.min.js
+/node_modules/
+/js/*compiled.js
+/js/*.js.map
