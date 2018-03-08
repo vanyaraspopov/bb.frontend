@@ -3,9 +3,11 @@
 *.iml
 out
 gen
-/css/*.css
-/css/*.css.map
-/js/*.min.js
+*.css
+*.css.map
+*.min.js
+*bundle.js
+*compiled.js
+*.js.map
 /node_modules/
-/js/*compiled.js
-/js/*.js.map
+vendor/
