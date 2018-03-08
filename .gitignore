@@ -1,0 +1,8 @@
+# IntelliJ project files
+.idea
+*.iml
+out
+gen
+/css/*.css
+/css/*.css.map
+/js/*.min.js

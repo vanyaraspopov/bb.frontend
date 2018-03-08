@@ -1,0 +1,57 @@
+$color-primary: #337ab7;
+
+input {
+  display: inline-block;
+  min-width: 0;
+}
+
+.header {
+  background-color: #28364f;
+  padding: 40px 0;
+  margin-bottom: 20px;
+}
+
+.header__title {
+  color: white;
+  margin: 0;
+}
+
+.module-info {
+  position: relative;
+  min-height: 46px;
+  margin: 5px 0;
+  padding-right: 20px;
+  border: 1px solid $color-primary;
+  border-radius: 5px;
+}
+
+.module-info__buttons {
+  float: right;
+  margin: 6px 0;
+  overflow: hidden;
+}
+
+.module-info__status {
+  position: absolute;
+  border-right: 1px solid $color-primary;
+  top: 0;
+  bottom: 0;
+  padding: 13px 10px;
+  &::after {
+    content: '';
+    //padding-left: 20px;
+  }
+}
+
+.module-info__status--enabled {
+  color: forestgreen;
+}
+
+.module-info__status--disabled {
+  color: darkred;
+}
+
+.module-info__title {
+  padding-left: 50px;
+  line-height: 46px;
+}
