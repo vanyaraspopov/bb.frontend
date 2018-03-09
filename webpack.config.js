@@ -1,4 +1,5 @@
 module.exports = {
+    devtool: 'cheap-module-eval-source-map',
     entry: './js/app.js',
     output: {
         filename: 'app.bundle.js'
