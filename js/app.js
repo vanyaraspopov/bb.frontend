@@ -1,7 +1,5 @@
 'use strict';
 
-import $ from 'jquery';
-import bootstrap from './vendor/bootstrap.min';
 import Vue from 'vue';
 
 const API_URI = '/api';
