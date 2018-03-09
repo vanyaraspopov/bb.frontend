@@ -33,13 +33,13 @@
         <div class="row">
           <div class="col-xs-12 col-sm-6 col-md-4" v-for="(module, name) in modules">
             <div class="module-info">
-          <span class="module-info__status"
-                v-bind:class="(module.status == 'online') ?
-                'module-info__status--enabled' :
-                'module-info__status--disabled'">
-            <i class="glyphicon glyphicon-ok" v-show="module.status == 'online'"></i>
-            <i class="glyphicon glyphicon-remove" v-show="module.status != 'online'"></i>
-          </span>
+              <span class="module-info__status"
+                    v-bind:class="(module.status == 'online') ?
+                      'module-info__status--enabled' :
+                      'module-info__status--disabled'">
+                <i class="glyphicon glyphicon-ok" v-show="module.status == 'online'"></i>
+                <i class="glyphicon glyphicon-remove" v-show="module.status != 'online'"></i>
+              </span>
               <span class="module-info__title">{{ module.title }}</span>
               <span v-show="module.status == 'online'">(работает)</span>
               <span v-show="module.status != 'online'">(не работает)</span>
@@ -59,54 +59,74 @@
         <h3 class="panel-title">Валютные пары</h3>
       </div>
       <div class="panel-body">
-        <table class="table table-striped table-bordered table-condensed">
-          <tr>
-            <th>Вкл</th>
-            <th>Квот. валюта</th>
-            <th>Баз. валюта</th>
-            <th>Сумма ордера</th>
-            <th>Коэфф. для покупки</th>
-            <th>Коэфф. для продажи (верх)</th>
-            <th>Коэфф. для продажи (низ)</th>
-            <th>Модули</th>
-            <th>Действия</th>
-          </tr>
-          <tr>
-            <td><i class="glyphicon glyphicon-ok"></i></td>
-            <td><input type="text" value="ETH" class="form-control"></td>
-            <td><input type="text" value="BTC" class="form-control"></td>
-            <td><input type="text" value="0.001" class="form-control"></td>
-            <td><input type="text" value="5" class="form-control"></td>
-            <td><input type="text" value="" class="form-control"></td>
-            <td><input type="text" value="" class="form-control"></td>
-            <td>
-              <li>Сбор данных</li>
-              <li>Торговля</li>
-            </td>
-            <td>
-              <button class="btn-xs btn-success"><i class="glyphicon glyphicon-ok" title="Сохранить"></i></button>
-              <button class="btn-xs btn-primary"><i class="glyphicon glyphicon-off" title="Вкл/Выкл"></i></button>
-              <button class="btn-xs btn-danger"><i class="glyphicon glyphicon-remove" title="Удалить"></i></button>
-            </td>
-          </tr>
-          <tr>
-            <td><i class="glyphicon glyphicon-remove"></i></td>
-            <td><input type="text" value="LTC" class="form-control"></td>
-            <td><input type="text" value="BTC" class="form-control"></td>
-            <td><input type="text" value="0.001" class="form-control"></td>
-            <td><input type="text" value="5" class="form-control"></td>
-            <td><input type="text" value="" class="form-control"></td>
-            <td><input type="text" value="" class="form-control"></td>
-            <td>
-              <li>Сбор данных</li>
-            </td>
-            <td>
-              <button class="btn-xs btn-success"><i class="glyphicon glyphicon-ok" title="Сохранить"></i></button>
-              <button class="btn-xs btn-primary"><i class="glyphicon glyphicon-off" title="Вкл/Выкл"></i></button>
-              <button class="btn-xs btn-danger"><i class="glyphicon glyphicon-remove" title="Удалить"></i></button>
-            </td>
-          </tr>
-        </table>
+
+        <div class="panel panel-primary" v-for="currency in currencies">
+          <div class="panel-heading">
+            <h3 class="panel-title">
+              {{ currency.quot }}/{{ currency.base }}
+            </h3>
+          </div>
+          <div class="panel-body">
+            <div class="row">
+              <div class="col-xs-12 col-sm-6" v-for="(active, name) in currency.modules">
+                <div class="alert" role="alert" v-bind:class="[ active ? 'alert-success' : 'alert-danger' ]">
+                  {{ modules[name].title }} -
+                  <span v-show="active">активно</span>
+                  <span v-show="!active">неактивно</span>
+                </div>
+              </div>
+            </div>
+            <form class="form-horizontal" @submit.prevent="currencySubmit">
+              <div class="form-group">
+                <label class="col-sm-2 control-label">Валютная пара</label>
+                <div class="col-sm-5">
+                  <input type="text" class="form-control" name="quot" placeholder="Квот. валюта" v-model="currency.quot"
+                         required>
+                </div>
+                <div class="col-sm-5">
+                  <input type="text" class="form-control" name="base" placeholder="Баз. валюта" v-model="currency.base"
+                         required>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">Сумма ордера</label>
+                <div class="col-sm-10">
+                  <input type="number" class="form-control" name="sum" placeholder="Сумма ордера" v-model="currency.sum"
+                         required>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">Коэфф. для покупки</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" name="buy" placeholder="Коэфф. для покупки"
+                         v-model="currency.buy">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">Коэфф. для продажи (верх)</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" name="sellHigh" placeholder="Коэфф. для продажи (верх)"
+                         v-model="currency.sellHigh">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">Коэфф. для продажи (низ)</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" name="sellLow" placeholder="Коэфф. для продажи (низ)"
+                         v-model="currency.sellLow">
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                  <input type="submit" class="btn btn-success" name="save" value="Сохранить">
+                  <input type="submit" class="btn btn-primary" name="on" value="Запуск торговли">
+                  <input type="submit" class="btn btn-warning" name="off" value="Остановка торговли">
+                  <input type="submit" class="btn btn-danger" name="delete" value="Удалить">
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
       </div>
     </div>
   </div>
