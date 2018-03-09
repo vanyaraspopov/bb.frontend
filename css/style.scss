@@ -1,5 +1,9 @@
 $color-primary: #337ab7;
 
+[v-cloak] {
+  display: none;
+}
+
 input {
   display: inline-block;
   min-width: 0;
@@ -26,9 +30,7 @@ input {
 }
 
 .module-info__buttons {
-  float: right;
-  margin: 6px 0;
-  overflow: hidden;
+  margin: 0 0 5px 50px;
 }
 
 .module-info__status {
