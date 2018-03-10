@@ -9,6 +9,15 @@ class Api {
         this.currencies = {
             all(responseHandler) {
                 get('/currencies', responseHandler);
+            },
+            create(currency, responseHandler) {
+                post('/currencies', currency, responseHandler);
+            },
+            save(currency, responseHandler) {
+                put(`/currencies/${currency.id}`, currency, responseHandler);
+            },
+            delete(id, responseHandler) {
+                del(`/currencies/${id}`, responseHandler);
             }
         };
         this.modules = {
@@ -28,6 +37,27 @@ class Api {
 function get(uri, responseHandler) {
     request(
         axios.get(API_URI + uri),
+        responseHandler
+    );
+}
+
+function post(uri, params, responseHandler) {
+    request(
+        axios.post(API_URI + uri, params),
+        responseHandler
+    );
+}
+
+function put(uri, params, responseHandler){
+    request(
+        axios.put(API_URI + uri, params),
+        responseHandler
+    );
+}
+
+function del(uri, responseHandler){
+    request(
+        axios.delete(API_URI + uri),
         responseHandler
     );
 }

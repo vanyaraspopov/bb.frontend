@@ -8,14 +8,63 @@ window.vm = new Vue({
     el: '#bb',
     data: {
         currencies: [],
-        modules: {}
+        modules: {},
+        newCurrency: {}
     },
     methods: {
-        currencySubmit(event){
-            alert('submit');
-            let form = event.target;
-            let data = new FormData(form);
+        //  Currencies
+        createCurrency(event) {
+            let params = {
+                buy: this.newCurrency.buy,
+                sellHigh: this.newCurrency.sellHigh,
+                sellLow: this.newCurrency.sellLow
+            };
+            let currency = {
+                quot: this.newCurrency.quot,
+                base: this.newCurrency.base,
+                sum: this.newCurrency.sum,
+                params: JSON.stringify(params),
+                active: false
+            };
+            api.currencies.create(currency, response => {
+                if (response.data.id) {
+                    this.currencies.push(currency);
+                    this.newCurrency = {};
+                    $('#addCurrencyModal').modal('toggle');
+                }
+            });
         },
+        saveCurrency(currency) {
+            currency.params = JSON.stringify({
+                buy: currency.buy,
+                sellHigh: currency.sellHigh,
+                sellLow: currency.sellLow
+            });
+            api.currencies.save(currency, response => {
+                if (response.data !== true) {
+                    console.error(response);
+                }
+            });
+        },
+        tradeCurrency(currency) {
+            currency.active = true;
+            this.saveCurrency(currency);
+        },
+        stopTradingCurrency(currency) {
+            currency.active = false;
+            this.saveCurrency(currency);
+        },
+        deleteCurrency(currency) {
+            api.currencies.delete(currency.id, response => {
+                if (response.data !== true) {
+                    console.error(response);
+                } else {
+                    this.currencies.splice(this.currencies.indexOf(currency), 1);
+                }
+            });
+        },
+
+        //  Modules
         refreshModules() {
             api.modules.info(response => {
                 for (var key in response.data) {
@@ -41,6 +90,10 @@ window.vm = new Vue({
 
         api.currencies.all(response => {
             for (let currency of response.data) {
+                let params = JSON.parse(currency.params);
+                currency.buy = params.buy;
+                currency.sellHigh = params.sellHigh;
+                currency.sellLow = params.sellLow;
                 this.currencies.push(currency);
             }
         });
