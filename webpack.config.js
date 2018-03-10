@@ -17,7 +17,8 @@ module.exports = {
     },
     resolve: {
         alias: {
-            vue: 'vue/dist/vue.js'
+            axios: 'axios/dist/axios.min.js',
+            vue: 'vue/dist/vue.min.js'
         }
     },
     watch: false
