@@ -1,9 +1,8 @@
 'use strict';
 
-import axios from 'axios';
 import Vue from 'vue';
 
-const API_URI = '/api';
+import api from './api';
 
 window.vm = new Vue({
     el: '#bb',
@@ -16,36 +15,34 @@ window.vm = new Vue({
             alert('submit');
             let form = event.target;
             let data = new FormData(form);
-            currencySubmit(data);
         },
         refreshModules() {
-            refreshModules(this);
+            api.modules.info(response => {
+                for (var key in response.data) {
+                    if (response.data.hasOwnProperty(key)) {
+                        Vue.set(this.modules, key, response.data[key])
+                    }
+                }
+            });
+        },
+        startModule(name) {
+            api.modules.start(name, response => {
+                this.refreshModules();
+            });
+        },
+        stopModule(name) {
+            api.modules.stop(name, response => {
+                this.refreshModules();
+            });
         }
     },
     mounted() {
-        refreshModules(this);
-        axios.get(`${API_URI}/currencies`)
-            .then(response => {
-                for (let currency of response.data) {
-                    this.currencies.push(currency);
-                }
-            })
-            .catch(err => console.error(err));
+        this.refreshModules();
+
+        api.currencies.all(response => {
+            for (let currency of response.data) {
+                this.currencies.push(currency);
+            }
+        });
     }
 });
-
-function refreshModules(vm) {
-    axios.get(`${API_URI}/modules`)
-        .then(response => {
-            for (var key in response.data) {
-                if (response.data.hasOwnProperty(key)) {
-                    Vue.set(vm.modules, key, response.data[key])
-                }
-            }
-        })
-        .catch(error => console.error(error));
-}
-
-function currencySubmit(data) {
-    axios.get('/', data);
-}

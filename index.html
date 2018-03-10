@@ -44,8 +44,8 @@
               <span v-show="module.status == 'online'">(работает)</span>
               <span v-show="module.status != 'online'">(не работает)</span>
               <div class="module-info__buttons">
-                <button class="btn btn-success">Запустить все</button>
-                <button class="btn btn-danger">Остановить все</button>
+                <button class="btn btn-success" @click="startModule(name)">Запустить все</button>
+                <button class="btn btn-danger" @click="stopModule(name)">Остановить все</button>
               </div>
             </div>
           </div>
