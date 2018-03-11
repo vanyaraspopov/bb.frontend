@@ -63,6 +63,16 @@ window.vm = new Vue({
                 }
             });
         },
+        tradeAll() {
+            for (let currency of this.currencies) {
+                this.tradeCurrency(currency);
+            }
+        },
+        stopTradingAll() {
+            for (let currency of this.currencies) {
+                this.stopTradingCurrency(currency);
+            }
+        },
 
         //  Modules
         refreshModules() {
