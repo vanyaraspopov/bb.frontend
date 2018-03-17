@@ -31,10 +31,10 @@
       </div>
       <div class="panel-body">
         <div class="row">
-          <div class="col-xs-12 col-sm-6 col-md-4" v-for="(module, name) in modules">
+          <div class="col-xs-12 col-sm-6 col-md-4" v-for="module in modules">
             <div class="module-info">
               <span class="module-info__status"
-                    v-bind:class="(module.status == 'online') ?
+                    :class="(module.status == 'online') ?
                       'module-info__status--enabled' :
                       'module-info__status--disabled'">
                 <i class="glyphicon glyphicon-ok" v-show="module.status == 'online'"></i>
@@ -75,16 +75,20 @@
           </div>
           <div class="panel-body">
             <div class="row">
-              <div class="col-xs-12 col-sm-6">
-                <div class="alert alert-success" role="alert" v-if="modules['bb.trader'].status == 'online' && currency.active">Торги идут</div>
+              <div class="col-xs-12 col-sm-6" v-if="modules['bb.trader'] !== undefined">
+                <div class="alert alert-success" role="alert"
+                     v-if="modules['bb.trader'].status == 'online' && currency.active">Торги идут
+                </div>
                 <div class="alert alert-danger" role="alert" v-else>
                   Торги остановлены
                   <span v-if="modules['bb.trader'].status != 'online'">(модуль не запущен)</span>
                   <span v-else-if="!currency.active">(не участвует в торгах)</span>
                 </div>
               </div>
-              <div class="col-xs-12 col-sm-6">
-                <div class="alert alert-success" role="alert" v-if="modules['bb.data-collector'].status == 'online'">Сбор данных идёт</div>
+              <div class="col-xs-12 col-sm-6" v-if="modules['bb.data-collector'] !== undefined">
+                <div class="alert alert-success" role="alert" v-if="modules['bb.data-collector'].status == 'online'">
+                  Сбор данных идёт
+                </div>
                 <div class="alert alert-danger" role="alert" v-else>Сбор данных остановлен</div>
               </div>
             </div>
@@ -103,7 +107,8 @@
               <div class="form-group">
                 <label class="col-sm-2 control-label">Сумма ордера</label>
                 <div class="col-sm-10">
-                  <input type="number" step="any" class="form-control" name="sum" placeholder="Сумма ордера" v-model="currency.sum"
+                  <input type="number" step="any" class="form-control" name="sum" placeholder="Сумма ордера"
+                         v-model="currency.sum"
                          required>
                 </div>
               </div>
@@ -131,8 +136,11 @@
               <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
                   <button type="submit" class="btn btn-success" @click="saveCurrency(currency)">Сохранить</button>
-                  <button type="submit" class="btn btn-primary" @click="tradeCurrency(currency)">Запуск торговли</button>
-                  <button type="submit" class="btn btn-warning" @click="stopTradingCurrency(currency)">Остановка торговли</button>
+                  <button type="submit" class="btn btn-primary" @click="tradeCurrency(currency)">Запуск торговли
+                  </button>
+                  <button type="submit" class="btn btn-warning" @click="stopTradingCurrency(currency)">Остановка
+                    торговли
+                  </button>
                   <button type="submit" class="btn btn-danger" @click="deleteCurrency(currency)">Удалить</button>
                 </div>
               </div>
@@ -148,7 +156,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                  aria-hidden="true">&times;</span></button>
+              aria-hidden="true">&times;</span></button>
           <h4 class="modal-title">Создание новой валютной пары</h4>
         </div>
         <div class="modal-body">

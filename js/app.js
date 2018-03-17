@@ -77,7 +77,7 @@ window.vm = new Vue({
         //  Modules
         refreshModules() {
             api.modules.info(response => {
-                for (var key in response.data) {
+                for (let key in response.data) {
                     if (response.data.hasOwnProperty(key)) {
                         Vue.set(this.modules, key, response.data[key])
                     }
