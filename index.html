@@ -31,7 +31,7 @@
       </div>
       <div class="panel-body">
         <div class="row">
-          <div class="col-xs-12 col-sm-6 col-md-4" v-for="module in modules">
+          <div class="col-xs-12 col-sm-6 col-md-4" v-for="(module, name) in modules">
             <div class="module-info">
               <span class="module-info__status"
                     :class="(module.status == 'online') ?
