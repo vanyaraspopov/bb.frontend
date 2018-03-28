@@ -14,20 +14,20 @@ window.vm = new Vue({
     methods: {
         //  Currencies
         createCurrency(event) {
-            let params = {
-                buy: this.newCurrency.buy,
-                sellHigh: this.newCurrency.sellHigh,
-                sellLow: this.newCurrency.sellLow
-            };
             let currency = {
                 quot: this.newCurrency.quot,
                 base: this.newCurrency.base,
                 sum: this.newCurrency.sum,
-                params: JSON.stringify(params),
+                params: {
+                    buy: this.newCurrency.buy,
+                    sellHigh: this.newCurrency.sellHigh,
+                    sellLow: this.newCurrency.sellLow
+                },
                 active: false
             };
             api.currencies.create(currency, response => {
                 if (response.data.id) {
+                    currency.id = response.data.id;
                     this.currencies.push(currency);
                     this.newCurrency = {};
                     $('#addCurrencyModal').modal('toggle');
@@ -35,11 +35,6 @@ window.vm = new Vue({
             });
         },
         saveCurrency(currency) {
-            currency.params = JSON.stringify({
-                buy: currency.buy,
-                sellHigh: currency.sellHigh,
-                sellLow: currency.sellLow
-            });
             api.currencies.save(currency, response => {
                 if (response.data !== true) {
                     console.error(response);
@@ -55,13 +50,16 @@ window.vm = new Vue({
             this.saveCurrency(currency);
         },
         deleteCurrency(currency) {
-            api.currencies.delete(currency.id, response => {
-                if (response.data !== true) {
-                    console.error(response);
-                } else {
-                    this.currencies.splice(this.currencies.indexOf(currency), 1);
-                }
-            });
+            let confirmed = confirm(`Действительно удалить валюту ${currency.quot}${currency.base}?`);
+            if (confirmed) {
+                api.currencies.delete(currency.id, response => {
+                    if (response.data !== true) {
+                        console.error(response);
+                    } else {
+                        this.currencies.splice(this.currencies.indexOf(currency), 1);
+                    }
+                });
+            }
         },
         tradeAll() {
             for (let currency of this.currencies) {
@@ -100,10 +98,7 @@ window.vm = new Vue({
 
         api.currencies.all(response => {
             for (let currency of response.data) {
-                let params = JSON.parse(currency.params);
-                currency.buy = params.buy;
-                currency.sellHigh = params.sellHigh;
-                currency.sellLow = params.sellLow;
+                currency.params = JSON.parse(currency.params);
                 this.currencies.push(currency);
             }
         });
