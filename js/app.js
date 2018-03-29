@@ -9,7 +9,9 @@ window.vm = new Vue({
     data: {
         currencies: [],
         modules: {},
-        newCurrency: {}
+        symbols: [],
+        newCurrency: {},
+        newSymbol: {}
     },
     methods: {
         //  Currencies
@@ -91,6 +93,34 @@ window.vm = new Vue({
             api.modules.stop(name, response => {
                 this.refreshModules();
             });
+        },
+
+        //  Symbols
+        createSymbol(event) {
+            let symbol = {
+                quot: this.newSymbol.quot,
+                base: this.newSymbol.base
+            };
+            api.symbols.create(symbol, response => {
+                if (response.data.id) {
+                    symbol.id = response.data.id;
+                    this.symbols.push(symbol);
+                    this.newSymbol = {};
+                    $('#addSymbolModal').modal('toggle');
+                }
+            });
+        },
+        deleteSymbol(symbol) {
+            let confirmed = confirm(`Действительно удалить валюту ${symbol.quot}${symbol.base}?`);
+            if (confirmed) {
+                api.symbols.delete(symbol.id, response => {
+                    if (response.data !== true) {
+                        console.error(response);
+                    } else {
+                        this.symbols.splice(this.currencies.indexOf(symbol), 1);
+                    }
+                });
+            }
         }
     },
     mounted() {
@@ -100,6 +130,12 @@ window.vm = new Vue({
             for (let currency of response.data) {
                 currency.params = JSON.parse(currency.params);
                 this.currencies.push(currency);
+            }
+        });
+
+        api.symbols.all(response => {
+            for (let symbol of response.data) {
+                this.symbols.push(symbol);
             }
         });
     }

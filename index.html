@@ -14,10 +14,10 @@
 <header class="header">
   <div class="container">
     <div class="row">
-      <div class="col-xs-12 col-sm-4">
+      <div class="col-xs-8">
         <h1 class="header__title">Binance Bot</h1>
       </div>
-      <div class="col-xs-12 col-sm-8">
+      <div class="col-xs-4">
         <form class="form-inline text-right" action="/logout" method="get">
           <button type="submit" class="btn btn-default">Выход</button>
         </form>
@@ -32,6 +32,7 @@
     <ul class="nav nav-pills">
       <li class="active"><a data-toggle="tab" href="#modules">Модули</a></li>
       <li><a data-toggle="tab" href="#currencies">Валютные пары</a></li>
+      <li><a data-toggle="tab" href="#symbols">Символы</a></li>
     </ul>
 
     <div class="tab-content">
@@ -170,6 +171,28 @@
           </div>
         </div>
       </div>
+      <div id="symbols" class="tab-pane fade">
+        <!-- Настройки валютных пар -->
+        <button class="btn btn-xs btn-success" data-toggle="modal" data-target="#addSymbolModal">
+          <i class="glyphicon glyphicon-plus"></i> Добавить
+        </button>
+        <table class="table table-responsive">
+          <tr>
+            <th>Квот. валюта</th>
+            <th>Базовая валюта</th>
+            <th>Действия</th>
+          </tr>
+          <tr v-for="symbol in symbols">
+            <td>{{ symbol.quot }}</td>
+            <td>{{ symbol.base }}</td>
+            <td>
+              <button class="btn btn-xs btn-danger" @click="deleteSymbol(symbol)">
+                <i class="glyphicon glyphicon-remove"></i> Удалить
+              </button>
+            </td>
+          </tr>
+        </table>
+      </div>
     </div>
 
   </div>
@@ -234,6 +257,38 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
           <button type="submit" class="btn btn-primary" form="newCurrencyForm">Создать</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+  <div class="modal fade" tabindex="-1" role="dialog" id="addSymbolModal">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+              aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Создание новой валютной пары</h4>
+        </div>
+        <div class="modal-body">
+          <form class="form-horizontal" @submit.prevent="createSymbol($event)" id="newSymbolForm">
+            <div class="form-group">
+              <label class="col-sm-4 control-label">Валютная пара</label>
+              <div class="col-sm-4">
+                <input type="text" class="form-control" name="quot" placeholder="Квот. валюта"
+                       v-model="newSymbol.quot"
+                       required>
+              </div>
+              <div class="col-sm-4">
+                <input type="text" class="form-control" name="base" placeholder="Баз. валюта"
+                       v-model="newSymbol.base"
+                       required>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+          <button type="submit" class="btn btn-primary" form="newSymbolForm">Создать</button>
         </div>
       </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->

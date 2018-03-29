@@ -31,6 +31,17 @@ class Api {
                 get(`/modules/stop/${name}`, responseHandler);
             }
         };
+        this.symbols = {
+            all(responseHandler) {
+                get('/symbols', responseHandler);
+            },
+            create(symbol, responseHandler) {
+                post('/symbols', symbol, responseHandler);
+            },
+            delete(id, responseHandler) {
+                del(`/symbols/${id}`, responseHandler);
+            }
+        }
     }
 }
 
@@ -48,14 +59,14 @@ function post(uri, params, responseHandler) {
     );
 }
 
-function put(uri, params, responseHandler){
+function put(uri, params, responseHandler) {
     request(
         axios.put(API_URI + uri, params),
         responseHandler
     );
 }
 
-function del(uri, responseHandler){
+function del(uri, responseHandler) {
     request(
         axios.delete(API_URI + uri),
         responseHandler
