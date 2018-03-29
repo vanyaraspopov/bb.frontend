@@ -23,7 +23,7 @@ mix.webpackConfig({
 
 mix.browserSync({
     files: [
-        "index.html",
+        "./*.html",
         "dist/js/*.js",
         "css/*.css"
     ],
