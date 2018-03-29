@@ -4,14 +4,44 @@ import Vue from 'vue';
 
 import api from './api';
 
+let moduleParametersDefaults = {
+    'bb.data-collector': {
+        symbol: null,
+        params: {}
+    },
+    'bb.trader': {
+        symbol: null,
+        params: {
+            sum: {
+                title: 'Сумма ордера',
+                value: 0.02
+            },
+            buy: {
+                title: 'Коэфф. для покупки',
+                value: 5
+            },
+            sellHigh: {
+                title: 'Коэфф. для продажи (верх), %',
+                value: 20
+            },
+            sellLow: {
+                title: 'Коэфф. для продажи (низ), %',
+                value: 5
+            }
+        }
+    }
+};
+
 window.vm = new Vue({
     el: '#bb',
     data: {
         currencies: [],
         modules: {},
         symbols: [],
+        moduleParametersDefaults: moduleParametersDefaults,
         newCurrency: {},
-        newSymbol: {}
+        newSymbol: {},
+        newModuleParameters: Object.assign({}, moduleParametersDefaults),
     },
     methods: {
         //  Currencies
@@ -75,10 +105,29 @@ window.vm = new Vue({
         },
 
         //  Modules
+        createModuleParameters(moduleName) {
+            let mp = {
+                module_id: this.modules[moduleName].id,
+                symbol_id: this.newModuleParameters[moduleName].symbol.id,
+                params: this.newModuleParameters[moduleName].params,
+            };
+            api.modules.params.create(mp, response => {
+                if (response.data.id) {
+                    mp = response.data;
+                    mp.params = JSON.parse(mp.params);
+                    this.modules[moduleName].params.push(mp);
+                    this.newModuleParameters = Object.assign({}, moduleParametersDefaults);
+                    $('#addParams' + this.hash(moduleName)).modal('toggle');
+                }
+            });
+        },
         refreshModules() {
             api.modules.info(response => {
                 for (let key in response.data) {
                     if (response.data.hasOwnProperty(key)) {
+                        for (let params of response.data[key].params) {
+                            params.params = JSON.parse(params.params);
+                        }
                         Vue.set(this.modules, key, response.data[key])
                     }
                 }
@@ -132,9 +181,9 @@ window.vm = new Vue({
                 /*jshint plusplus:false bitwise:false*/
                 for (h = s.length - 1; h >= 0; h--) {
                     o = s.charCodeAt(h);
-                    a = (a<<6&268435455) + o + (o<<14);
+                    a = (a << 6 & 268435455) + o + (o << 14);
                     c = a & 266338304;
-                    a = c!==0?a^c>>21:a;
+                    a = c !== 0 ? a ^ c >> 21 : a;
                 }
             }
             return String(a);

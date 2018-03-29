@@ -29,6 +29,20 @@ class Api {
             },
             stop(name, responseHandler) {
                 get(`/modules/stop/${name}`, responseHandler);
+            },
+            params: {
+                create(params, responseHandler) {
+                    post(`/modules/params`, params, responseHandler);
+                },
+                delete(id, responseHandler) {
+                    del(`/modules/params/${id}`, responseHandler);
+                },
+                get(moduleId, responseHandler) {
+                    get(`/modules/params/${moduleId}`, responseHandler);
+                },
+                save(params, responseHandler) {
+                    put(`/modules/params/${params.id}`, params, responseHandler);
+                }
             }
         };
         this.symbols = {
@@ -41,7 +55,7 @@ class Api {
             delete(id, responseHandler) {
                 del(`/symbols/${id}`, responseHandler);
             }
-        }
+        };
     }
 }
 
