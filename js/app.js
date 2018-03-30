@@ -115,6 +115,26 @@ window.vm = new Vue({
                 this.saveModuleParameters(parameters);
             }
         },
+        includeAll(module) {
+            let moduleName = module.pm2_name;
+            let allSymbols = this.symbols.map(s => s.id);
+            let includedSymbols = module.params.map(p => p.symbol_id);
+            for (let symbol_id of allSymbols) {
+                if (includedSymbols.includes(symbol_id)) continue;
+                let mp = {
+                    symbol_id,
+                    module_id: module.id,
+                    params: Object.assign({}, this.moduleParametersDefaults[moduleName].params)
+                };
+                api.modules.params.create(mp, response => {
+                    if (response.data.id) {
+                        mp = response.data;
+                        mp.params = JSON.parse(mp.params);
+                        this.modules[moduleName].params.push(mp);
+                    }
+                });
+            }
+        },
 
         //  Modules
         createModuleParameters(moduleName) {
