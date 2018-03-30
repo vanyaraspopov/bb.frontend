@@ -31,8 +31,7 @@
 
     <ul class="nav nav-pills">
       <li class="active"><a data-toggle="tab" href="#modules">Модули</a></li>
-      <li><a data-toggle="tab" href="#currencies">Валютные пары</a></li>
-      <li><a data-toggle="tab" href="#symbols">Символы</a></li>
+      <li><a data-toggle="tab" href="#symbols">Валютные пары</a></li>
     </ul>
 
     <div class="tab-content">
@@ -116,115 +115,6 @@
           </div>
         </div>
       </div>
-      <div id="currencies" class="tab-pane fade">
-        <!-- Настройки валютных пар -->
-        <button class="btn btn-xs btn-success" data-toggle="modal" data-target="#addCurrencyModal">
-          <i class="glyphicon glyphicon-plus"></i> Добавить
-        </button>
-        <button class="btn btn-xs btn-primary" @click="tradeAll()">Торговать по всем парам</button>
-        <button class="btn btn-xs btn-warning" @click="stopTradingAll()">Остановить торги по всем
-          парам
-        </button>
-        <div class="panel panel-primary" v-for="currency in currencies">
-          <div class="panel-heading">
-            <h3 class="panel-title">
-              {{ currency.quot }}/{{ currency.base }}
-            </h3>
-          </div>
-          <div class="panel-body">
-            <div class="row">
-              <div class="col-xs-12 col-sm-6" v-if="modules['bb.trader'] !== undefined">
-                <div class="alert alert-success" role="alert"
-                     v-if="modules['bb.trader'].status == 'online' && currency.active">Торги
-                  идут
-                </div>
-                <div class="alert alert-danger" role="alert" v-else>
-                  Торги остановлены
-                  <span v-if="modules['bb.trader'].status != 'online'">(модуль не запущен)</span>
-                  <span v-else-if="!currency.active">(не участвует в торгах)</span>
-                </div>
-              </div>
-              <div class="col-xs-12 col-sm-6" v-if="modules['bb.data-collector'] !== undefined">
-                <div class="alert alert-success" role="alert"
-                     v-if="modules['bb.data-collector'].status == 'online'">
-                  Сбор данных идёт
-                </div>
-                <div class="alert alert-danger" role="alert" v-else>Сбор данных остановлен</div>
-              </div>
-            </div>
-            <form class="form-horizontal" @submit.prevent>
-              <div class="form-group">
-                <label class="col-sm-2 control-label">Валютная пара</label>
-                <div class="col-sm-5">
-                  <input type="text" class="form-control" name="quot"
-                         placeholder="Квот. валюта"
-                         v-model="currency.quot"
-                         required>
-                </div>
-                <div class="col-sm-5">
-                  <input type="text" class="form-control" name="base"
-                         placeholder="Баз. валюта"
-                         v-model="currency.base"
-                         required>
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="col-sm-2 control-label">Сумма ордера</label>
-                <div class="col-sm-10">
-                  <input type="number" step="any" class="form-control" name="sum"
-                         placeholder="Сумма ордера"
-                         v-model="currency.sum"
-                         required>
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="col-sm-2 control-label">Коэфф. для покупки</label>
-                <div class="col-sm-10">
-                  <input type="text" class="form-control" name="buy"
-                         placeholder="Коэфф. для покупки"
-                         v-model="currency.params.buy">
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="col-sm-2 control-label">Коэфф. для продажи (верх), %</label>
-                <div class="col-sm-10">
-                  <input type="text" class="form-control" name="sellHigh"
-                         placeholder="Коэфф. для продажи (верх)"
-                         v-model="currency.params.sellHigh">
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="col-sm-2 control-label">Коэфф. для продажи (низ), %</label>
-                <div class="col-sm-10">
-                  <input type="text" class="form-control" name="sellLow"
-                         placeholder="Коэфф. для продажи (низ)"
-                         v-model="currency.params.sellLow">
-                </div>
-              </div>
-              <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-10">
-                  <button type="submit" class="btn btn-success"
-                          @click="saveCurrency(currency)">
-                    Сохранить
-                  </button>
-                  <button type="submit" class="btn btn-primary"
-                          @click="tradeCurrency(currency)">
-                    Запуск торговли
-                  </button>
-                  <button type="submit" class="btn btn-warning"
-                          @click="stopTradingCurrency(currency)">Остановка
-                    торговли
-                  </button>
-                  <button type="submit" class="btn btn-danger"
-                          @click="deleteCurrency(currency)">
-                    Удалить
-                  </button>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
       <div id="symbols" class="tab-pane fade">
         <!-- Настройки валютных пар -->
         <button class="btn btn-xs btn-success" data-toggle="modal" data-target="#addSymbolModal">
@@ -232,11 +122,13 @@
         </button>
         <table class="table table-responsive">
           <tr>
+            <th>ID</th>
             <th>Квот. валюта</th>
             <th>Базовая валюта</th>
             <th>Действия</th>
           </tr>
           <tr v-for="symbol in symbols">
+            <td>{{ symbol.id }}</td>
             <td>{{ symbol.quot }}</td>
             <td>{{ symbol.base }}</td>
             <td>
@@ -251,70 +143,6 @@
 
   </div>
 
-  <div class="modal fade" tabindex="-1" role="dialog" id="addCurrencyModal">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-              aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title">Создание новой валютной пары</h4>
-        </div>
-        <div class="modal-body">
-          <form class="form-horizontal" @submit.prevent="createCurrency($event)" id="newCurrencyForm">
-            <div class="form-group">
-              <label class="col-sm-4 control-label">Валютная пара</label>
-              <div class="col-sm-4">
-                <input type="text" class="form-control" name="quot" placeholder="Квот. валюта"
-                       v-model="newCurrency.quot"
-                       required>
-              </div>
-              <div class="col-sm-4">
-                <input type="text" class="form-control" name="base" placeholder="Баз. валюта"
-                       v-model="newCurrency.base"
-                       required>
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="col-sm-4 control-label">Сумма ордера</label>
-              <div class="col-sm-8">
-                <input type="number" step="any" class="form-control" name="sum"
-                       placeholder="Сумма ордера"
-                       v-model="newCurrency.sum"
-                       required>
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="col-sm-4 control-label">Коэфф. для покупки</label>
-              <div class="col-sm-8">
-                <input type="text" class="form-control" name="buy" placeholder="Коэфф. для покупки"
-                       v-model="newCurrency.buy">
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="col-sm-4 control-label">Коэфф. для продажи (верх), %</label>
-              <div class="col-sm-8">
-                <input type="text" class="form-control" name="sellHigh"
-                       placeholder="Коэфф. для продажи (верх)"
-                       v-model="newCurrency.sellHigh">
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="col-sm-4 control-label">Коэфф. для продажи (низ), %</label>
-              <div class="col-sm-8">
-                <input type="text" class="form-control" name="sellLow"
-                       placeholder="Коэфф. для продажи (низ)"
-                       v-model="newCurrency.sellLow">
-              </div>
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
-          <button type="submit" class="btn btn-primary" form="newCurrencyForm">Создать</button>
-        </div>
-      </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-  </div><!-- /.modal -->
   <div class="modal fade" tabindex="-1" role="dialog" id="addSymbolModal">
     <div class="modal-dialog" role="document">
       <div class="modal-content">

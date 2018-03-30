@@ -60,107 +60,13 @@ let moduleParametersDefaults = {
 window.vm = new Vue({
     el: '#bb',
     data: {
-        currencies: [],
         modules: {},
         symbols: [],
         moduleParametersDefaults: moduleParametersDefaults,
-        newCurrency: {},
         newSymbol: {},
         newModuleParameters: Object.assign({}, moduleParametersDefaults),
     },
     methods: {
-        //  Currencies
-        createCurrency(event) {
-            let currency = {
-                quot: this.newCurrency.quot,
-                base: this.newCurrency.base,
-                sum: this.newCurrency.sum,
-                params: {
-                    buy: this.newCurrency.buy,
-                    sellHigh: this.newCurrency.sellHigh,
-                    sellLow: this.newCurrency.sellLow
-                },
-                active: false
-            };
-            api.currencies.create(currency, response => {
-                if (response.data.id) {
-                    currency.id = response.data.id;
-                    this.currencies.push(currency);
-                    this.newCurrency = {};
-                    $('#addCurrencyModal').modal('toggle');
-                }
-            });
-        },
-        saveCurrency(currency) {
-            api.currencies.save(currency, response => {
-                if (response.data !== true) {
-                    console.error(response);
-                }
-            });
-        },
-        tradeCurrency(currency) {
-            currency.active = true;
-            this.saveCurrency(currency);
-        },
-        stopTradingCurrency(currency) {
-            currency.active = false;
-            this.saveCurrency(currency);
-        },
-        deleteCurrency(currency) {
-            let confirmed = confirm(`Действительно удалить валюту ${currency.quot}${currency.base}?`);
-            if (confirmed) {
-                api.currencies.delete(currency.id, response => {
-                    if (response.data !== true) {
-                        console.error(response);
-                    } else {
-                        this.currencies.splice(this.currencies.indexOf(currency), 1);
-                    }
-                });
-            }
-        },
-        tradeAll() {
-            for (let currency of this.currencies) {
-                this.tradeCurrency(currency);
-            }
-        },
-        stopTradingAll() {
-            for (let currency of this.currencies) {
-                this.stopTradingCurrency(currency);
-            }
-        },
-        activateAll(module) {
-            for (let parameters of module.params) {
-                parameters.active = true;
-                this.saveModuleParameters(parameters);
-            }
-        },
-        deactivateAll(module) {
-            for (let parameters of module.params) {
-                parameters.active = false;
-                this.saveModuleParameters(parameters);
-            }
-        },
-        includeAll(module) {
-            let moduleName = module.pm2_name;
-            let allSymbols = this.symbols.map(s => s.id);
-            let includedSymbols = module.params.map(p => p.symbol_id);
-            for (let symbol_id of allSymbols) {
-                if (includedSymbols.includes(symbol_id)) continue;
-                let mp = {
-                    symbol_id,
-                    module_id: module.id,
-                    params: Object.assign({}, this.moduleParametersDefaults[moduleName].params)
-                };
-                api.modules.params.create(mp, response => {
-                    if (response.data.id) {
-                        mp = response.data;
-                        mp.params = JSON.parse(mp.params);
-                        this.modules[moduleName].params.push(mp);
-                    }
-                });
-            }
-        },
-
         //  Modules
         createModuleParameters(moduleName) {
             let mp = {
@@ -247,6 +153,38 @@ window.vm = new Vue({
                 });
             }
         },
+        activateAll(module) {
+            for (let parameters of module.params) {
+                parameters.active = true;
+                this.saveModuleParameters(parameters);
+            }
+        },
+        deactivateAll(module) {
+            for (let parameters of module.params) {
+                parameters.active = false;
+                this.saveModuleParameters(parameters);
+            }
+        },
+        includeAll(module) {
+            let moduleName = module.pm2_name;
+            let allSymbols = this.symbols.map(s => s.id);
+            let includedSymbols = module.params.map(p => p.symbol_id);
+            for (let symbol_id of allSymbols) {
+                if (includedSymbols.includes(symbol_id)) continue;
+                let mp = {
+                    symbol_id,
+                    module_id: module.id,
+                    params: Object.assign({}, this.moduleParametersDefaults[moduleName].params)
+                };
+                api.modules.params.create(mp, response => {
+                    if (response.data.id) {
+                        mp = response.data;
+                        mp.params = JSON.parse(mp.params);
+                        this.modules[moduleName].params.push(mp);
+                    }
+                });
+            }
+        },
 
         //  Utils
         hash(s) {
@@ -267,13 +205,6 @@ window.vm = new Vue({
     },
     mounted() {
         this.refreshModules();
-
-        api.currencies.all(response => {
-            for (let currency of response.data) {
-                currency.params = JSON.parse(currency.params);
-                this.currencies.push(currency);
-            }
-        });
 
         api.symbols.all(response => {
             for (let symbol of response.data) {

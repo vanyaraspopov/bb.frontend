@@ -6,20 +6,6 @@ const API_URI = '/api';
 
 class Api {
     constructor() {
-        this.currencies = {
-            all(responseHandler) {
-                get('/currencies', responseHandler);
-            },
-            create(currency, responseHandler) {
-                post('/currencies', currency, responseHandler);
-            },
-            save(currency, responseHandler) {
-                put(`/currencies/${currency.id}`, currency, responseHandler);
-            },
-            delete(id, responseHandler) {
-                del(`/currencies/${id}`, responseHandler);
-            }
-        };
         this.modules = {
             info(responseHandler) {
                 get('/modules', responseHandler);
