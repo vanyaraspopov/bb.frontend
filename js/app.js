@@ -104,10 +104,16 @@ window.vm = new Vue({
             }
         },
         activateAll(module) {
-            alert('TODO: set all currencies active');
+            for (let parameters of module.params) {
+                parameters.active = true;
+                this.saveModuleParameters(parameters);
+            }
         },
         deactivateAll(module) {
-            alert('TODO: set all currencies inactive');
+            for (let parameters of module.params) {
+                parameters.active = false;
+                this.saveModuleParameters(parameters);
+            }
         },
 
         //  Modules
@@ -126,6 +132,25 @@ window.vm = new Vue({
                     $('#addParams' + this.hash(moduleName)).modal('toggle');
                 }
             });
+        },
+        saveModuleParameters(moduleParameters) {
+            api.modules.params.save(moduleParameters, response => {
+                if (response.data !== true) {
+                    console.error(response);
+                }
+            });
+        },
+        deleteModuleParameters(module, moduleParameters) {
+            let confirmed = confirm(`Действительно удалить валюту ${moduleParameters.symbol.symbol}?`);
+            if (confirmed) {
+                api.modules.params.delete(moduleParameters.id, response => {
+                    if (response.data !== true) {
+                        console.error(response);
+                    } else {
+                        module.params.splice(module.params.indexOf(moduleParameters), 1);
+                    }
+                });
+            }
         },
         refreshModules() {
             api.modules.info(response => {
