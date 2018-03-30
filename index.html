@@ -61,44 +61,52 @@
                         @click="newModuleParameters.module = module">
                   <i class="glyphicon glyphicon-plus"></i> Добавить валютную пару
                 </button>
-                <div class="panel panel-success" v-for="currency in module.params">
-                  <div class="panel-heading">
-                    <h3 class="panel-title">
-                      {{ currency.symbol.quot }}/{{ currency.symbol.base }}
-                    </h3>
-                  </div>
-                  <div class="panel-body">
-                    <form class="form-horizontal" @submit.prevent>
-                      <div class="form-group" v-for="param in currency.params">
-                        <label class="col-sm-2 control-label">{{ param.title }}</label>
-                        <div class="col-sm-10">
-                          <input type="text" class="form-control" :name="param.key"
-                                 :placeholder="param.title"
-                                 v-model="param.value"
-                                 required>
-                        </div>
+                <button class="btn btn-xs btn-primary" @click="activateAll(module)">Активировать все</button>
+                <button class="btn btn-xs btn-warning" @click="deactivateAll(module)">Отключить все</button>
+                <div class="panel-group" v-for="currency in module.params">
+                  <div class="panel panel-success">
+                    <div class="panel-heading" style="position: relative">
+                      <h3 class="panel-title">
+                        {{ currency.symbol.quot }}/{{ currency.symbol.base }}
+                        <span class="label label-success" v-if="currency.active">"{{ module.title }}" работает</span>
+                        <span class="label label-danger" v-else>"{{ module.title }}" не работает</span>
+                      </h3>
+                      <a :href="'#panelModule' + module.id + currency.symbol.symbol" data-toggle="collapse"
+                         style="position: absolute;top:0;left:0;right:0;bottom:0;"></a>
+                    </div>
+                    <div :id="'panelModule' + module.id + currency.symbol.symbol" class="panel-collapse collapse">
+                      <div class="panel-body">
+                        <form class="form-horizontal" @submit.prevent>
+                          <div class="form-group" v-for="param in currency.params">
+                            <label class="col-sm-2 control-label">{{ param.title }}</label>
+                            <div class="col-sm-10">
+                              <input type="text" class="form-control" :name="param.key"
+                                     :placeholder="param.title"
+                                     v-model="param.value"
+                                     required>
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label class="col-sm-2 control-label">Вкл/Выкл</label>
+                            <div class="col-sm-10">
+                              <input type="checkbox" name="active" v-model="currency.active">
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                              <button type="submit" class="btn btn-success"
+                                      @click="saveCurrency(currency)">
+                                Сохранить
+                              </button>
+                              <button type="submit" class="btn btn-danger"
+                                      @click="deleteCurrency(currency)">
+                                Удалить
+                              </button>
+                            </div>
+                          </div>
+                        </form>
                       </div>
-                      <div class="form-group">
-                        <div class="col-sm-offset-2 col-sm-10">
-                          <button type="submit" class="btn btn-success"
-                                  @click="saveCurrency(currency)">
-                            Сохранить
-                          </button>
-                          <button type="submit" class="btn btn-primary"
-                                  @click="tradeCurrency(currency)">
-                            Запуск торговли
-                          </button>
-                          <button type="submit" class="btn btn-warning"
-                                  @click="stopTradingCurrency(currency)">Остановка
-                            торговли
-                          </button>
-                          <button type="submit" class="btn btn-danger"
-                                  @click="deleteCurrency(currency)">
-                            Удалить
-                          </button>
-                        </div>
-                      </div>
-                    </form>
+                    </div>
                   </div>
                 </div>
               </div>

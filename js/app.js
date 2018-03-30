@@ -103,6 +103,12 @@ window.vm = new Vue({
                 this.stopTradingCurrency(currency);
             }
         },
+        activateAll(module) {
+            alert('TODO: set all currencies active');
+        },
+        deactivateAll(module) {
+            alert('TODO: set all currencies inactive');
+        },
 
         //  Modules
         createModuleParameters(moduleName) {
