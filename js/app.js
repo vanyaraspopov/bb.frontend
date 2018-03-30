@@ -14,7 +14,7 @@ let moduleParametersDefaults = {
         params: {
             sum: {
                 title: 'Сумма ордера',
-                value: 0.02
+                value: 0.002
             },
             buy: {
                 title: 'Коэфф. для покупки',
@@ -26,7 +26,32 @@ let moduleParametersDefaults = {
             },
             sellLow: {
                 title: 'Коэфф. для продажи (низ), %',
-                value: 5
+                value: 2
+            }
+        }
+    },
+    'bb.scalper': {
+        symbol: null,
+        params: {
+            sum: {
+                title: 'Сумма ордера',
+                value: 0.002
+            },
+            period: {
+                title: 'Длина периода, мин',
+                value: 60
+            },
+            subsidence: {
+                title: 'Проседание цены для покупки, %',
+                value: 0.5
+            },
+            sellHigh: {
+                title: 'Коэфф. для продажи (верх), %',
+                value: 0.5
+            },
+            sellLow: {
+                title: 'Коэфф. для продажи (низ), %',
+                value: 2
             }
         }
     }
