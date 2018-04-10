@@ -148,7 +148,8 @@ window.vm = new Vue({
                     if (response.data !== true) {
                         console.error(response);
                     } else {
-                        this.symbols.splice(this.currencies.indexOf(symbol), 1);
+                        this.symbols.splice(this.symbols.indexOf(symbol), 1);
+                        this.refreshModules();
                     }
                 });
             }
