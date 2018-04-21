@@ -103,6 +103,18 @@ window.vm = new Vue({
                 });
             }
         },
+        deleteAllModuleParameters(module) {
+            let confirmed = confirm(`Действительно удалить все параметры модуля?`);
+            if (confirmed) {
+                api.modules.params.deleteAll(module.id, response => {
+                    if (response.data !== true) {
+                        console.error(response);
+                    } else {
+                        module.params = [];
+                    }
+                });
+            }
+        },
         refreshModules() {
             api.modules.info(response => {
                 for (let key in response.data) {

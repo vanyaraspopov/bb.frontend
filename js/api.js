@@ -23,6 +23,9 @@ class Api {
                 delete(id, responseHandler) {
                     del(`/modules/params/${id}`, responseHandler);
                 },
+                deleteAll(module_id, responseHandler) {
+                    del(`/modules/${module_id}/params`, responseHandler);
+                },
                 get(moduleId, responseHandler) {
                     get(`/modules/params/${moduleId}`, responseHandler);
                 },

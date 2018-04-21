@@ -63,6 +63,7 @@
                 <button class="btn btn-xs btn-warning" @click="includeAll(module)">Добавить все</button>
                 <button class="btn btn-xs btn-primary" @click="activateAll(module)">Активировать все</button>
                 <button class="btn btn-xs btn-danger" @click="deactivateAll(module)">Отключить все</button>
+                <button class="btn btn-xs btn-danger" @click="deleteAllModuleParameters(module)">Удалить все</button>
                 <div class="panel-group" v-for="currency in module.params">
                   <div class="panel panel-success">
                     <div class="panel-heading" style="position: relative">
