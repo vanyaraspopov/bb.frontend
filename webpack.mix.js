@@ -5,12 +5,15 @@ mix.options({
 });
 
 mix.js('js/app.js', 'js')
-    .extract([
-        'axios',
-        'vue'
-    ])
     .sourceMaps(false, 'cheap-module-eval-source-map')
     .disableNotifications();
+
+mix.sass('css/style.scss', 'css');
+
+mix.extract([
+    'axios',
+    'vue'
+]);
 
 mix.webpackConfig({
     resolve: {
@@ -24,8 +27,7 @@ mix.webpackConfig({
 mix.browserSync({
     files: [
         "./*.html",
-        "dist/js/*.js",
-        "css/*.css"
+        "dist/**/*.*",
     ],
     proxy: 'localhost:3000'
 });
