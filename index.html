@@ -65,7 +65,7 @@
                   <div class="panel panel-success">
                     <div class="panel-heading" style="position: relative">
                       <h3 class="panel-title">
-                        {{ currency.symbol.quot }}/{{ currency.symbol.base }}
+                        {{ currency.symbol.base }}/{{ currency.symbol.quot }}
                         <span class="label label-success" v-if="module.status == 'online' && currency.active">"{{ module.title }}" работает</span>
                         <span class="label label-danger" v-else>"{{ module.title }}" не работает</span>
                       </h3>
@@ -121,14 +121,14 @@
         <table class="table table-responsive">
           <tr>
             <th>ID</th>
-            <th>Квот. валюта</th>
             <th>Базовая валюта</th>
+            <th>Квот. валюта</th>
             <th>Действия</th>
           </tr>
           <tr v-for="symbol in symbols">
             <td>{{ symbol.id }}</td>
-            <td>{{ symbol.quot }}</td>
             <td>{{ symbol.base }}</td>
+            <td>{{ symbol.quot }}</td>
             <td>
               <button class="btn btn-xs btn-danger" @click="deleteSymbol(symbol)">
                 <i class="glyphicon glyphicon-remove"></i> Удалить
@@ -154,13 +154,13 @@
             <div class="form-group">
               <label class="col-sm-4 control-label">Валютная пара</label>
               <div class="col-sm-4">
-                <input type="text" class="form-control" name="quot" placeholder="Квот. валюта"
-                       v-model="newSymbol.quot"
+                <input type="text" class="form-control" name="base" placeholder="Баз. валюта"
+                       v-model="newSymbol.base"
                        required>
               </div>
               <div class="col-sm-4">
-                <input type="text" class="form-control" name="base" placeholder="Баз. валюта"
-                       v-model="newSymbol.base"
+                <input type="text" class="form-control" name="quot" placeholder="Квот. валюта"
+                       v-model="newSymbol.quot"
                        required>
               </div>
             </div>
@@ -191,7 +191,7 @@
                 <select class="form-control" name="symbol" placeholder="Валют. пара"
                         v-model="newModuleParameters[moduleName].symbol"
                         required>
-                  <option :value="symbol" v-for="symbol in symbols">{{ `${symbol.quot}/${symbol.base}` }}</option>
+                  <option :value="symbol" v-for="symbol in symbols">{{ `${symbol.base}/${symbol.quot}` }}</option>
                 </select>
               </div>
             </div>

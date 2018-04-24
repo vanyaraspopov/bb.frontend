@@ -154,7 +154,7 @@ window.vm = new Vue({
             });
         },
         deleteSymbol(symbol) {
-            let confirmed = confirm(`Действительно удалить валюту ${symbol.quot}${symbol.base}?`);
+            let confirmed = confirm(`Действительно удалить валюту ${symbol.base}${symbol.quot}?`);
             if (confirmed) {
                 api.symbols.delete(symbol.id, response => {
                     if (response.data !== true) {
