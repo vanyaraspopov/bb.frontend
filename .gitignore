@@ -11,4 +11,4 @@ gen
 *.js.map
 /node_modules/
 vendor/
-dist/
+!dist/

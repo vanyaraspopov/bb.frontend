@@ -9,7 +9,7 @@ let moduleParametersDefaults = {
         symbol: null,
         params: {}
     },
-    'bb.trader': {
+    'bb.pumper': {
         symbol: null,
         params: {
             sum: {
